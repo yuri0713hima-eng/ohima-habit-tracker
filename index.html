@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-title" content="おひまの習慣帳">
   <meta name="description" content="ジム・TOEIC勉強・読書を記録する、やさしい習慣帳。">
   <title>おひまの習慣帳</title>
-  <link rel="stylesheet" href="style.css?v=work-20261028">
-  <script src="app.js?v=work-20261028" type="module"></script>
+  <link rel="stylesheet" href="style.css?v=joy-20261028">
+  <script src="app.js?v=joy-20261028" type="module"></script>
 </head>
 <body>
   <header><a class="brand" href="./">おひまの習慣帳<span>毎日の、小さな積み重ね。</span></a><span class="header-tag">わたしの習慣日記</span></header>
@@ -23,6 +23,10 @@
       <p id="save-status" class="save-status" role="status">記録はこのブラウザに自動保存されます。</p>
     </section>
     <section class="weekly"><div class="section-heading"><div><p class="eyebrow">小さな一歩をふりかえる</p><h2>一週間の積み重ね</h2></div><span id="week-range"></span></div><p id="weekly-rate" class="weekly-rate"></p><p class="calendar-help">日付をタップすると、その日の記録を開けます。</p><div class="week-table-wrap"><table><caption class="sr-only">選択した日を含む月曜日から日曜日までの達成状況</caption><thead id="week-head"></thead><tbody id="week-body"></tbody></table></div><div class="week-footer"><span><i></i> 達成した日</span><p id="week-summary"></p></div></section>
+
+    <section class="joy-panel" aria-labelledby="garden-title"><div class="joy-heading"><div><p class="eyebrow">YOUR LITTLE GARDEN</p><h2 id="garden-title">おひまの小さなお庭 🌱</h2></div><span class="joy-hint">休んでも枯れないよ</span></div><p class="joy-intro">頑張った分だけ、少しずつ花が増えるお庭。過去の記録もちゃんと育ってるよ。</p><div id="garden-plants" class="garden-plants" aria-live="polite"></div><p id="garden-caption" class="joy-caption"></p></section>
+    <section class="joy-panel" aria-labelledby="month-title"><div class="joy-heading"><div><p class="eyebrow">MONTHLY MEMORIES</p><h2 id="month-title">花咲く月間カレンダー 🌸</h2></div><div class="month-controls"><button id="month-prev" type="button" aria-label="前の月">‹</button><strong id="month-label"></strong><button id="month-next" type="button" aria-label="次の月">›</button></div></div><p class="joy-intro">色のついた日は「できた」があった日。日付を押すと、その日の記録に移動できるよ。</p><div id="month-grid" class="month-grid" aria-label="月間達成カレンダー"></div><div class="month-legend"><span>🌱 ジム</span><span>💜 TOEIC</span><span>📖 読書</span></div></section>
+    <section class="joy-panel" aria-labelledby="report-title"><div class="joy-heading"><div><p class="eyebrow">LOOK HOW FAR YOU'VE COME</p><h2 id="report-title">今月の成長レポート ✨</h2></div></div><p class="joy-intro">達成した日を数えるだけ。休んだ日を責めない成長記録。</p><div id="growth-report" class="growth-report"></div><p id="report-caption" class="joy-caption"></p></section>
     <aside class="quote">“ 続けることが、いちばんの才能。 ”<span>完璧な毎日より、また始める今日を。</span></aside>
   </div>
   <div id="work-view" hidden>
