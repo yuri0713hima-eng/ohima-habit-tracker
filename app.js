@@ -72,3 +72,77 @@ document.querySelector('#week-head').addEventListener('click', event => {
   dateInput.value = button.dataset.date;
   render();
 });
+
+
+/* Work notebook: separate storage; never modifies ohima-habits-v1. */
+const workStorageKey = 'ohima-work-v1';
+const workDate = document.querySelector('#work-date');
+const workList = document.querySelector('#work-list');
+const workWins = document.querySelector('#work-wins');
+const workNext = document.querySelector('#work-next');
+let workData = { tasks: [], notes: {} };
+let workStorageError = false;
+try {
+  const loaded = JSON.parse(localStorage.getItem(workStorageKey));
+  if (loaded && typeof loaded === 'object' && !Array.isArray(loaded)) {
+    workData.tasks = Array.isArray(loaded.tasks) ? loaded.tasks.filter(t => t && typeof t.title === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(t.day)).slice(0,2000).map(t => ({
+      id: String(t.id || ''), title: t.title.slice(0,120), day: t.day,
+      priority: ['高','中','低'].includes(t.priority) ? t.priority : '中',
+      due: /^\d{4}-\d{2}-\d{2}$/.test(t.due || '') ? t.due : '',
+      done: t.done === true
+    })) : [];
+    workData.notes = loaded.notes && typeof loaded.notes === 'object' && !Array.isArray(loaded.notes) ? loaded.notes : {};
+  }
+} catch { workStorageError = true; }
+workDate.value = dateKey(new Date());
+function saveWork() {
+  try { localStorage.setItem(workStorageKey, JSON.stringify(workData)); workStorageError = false; }
+  catch { workStorageError = true; }
+  document.querySelector('#work-status').textContent = workStorageError ? '保存に失敗しました。入力内容を別に控えてください。' : 'このiPhoneのブラウザに自動保存しました。';
+}
+function renderWork() {
+  const key = workDate.value;
+  const tasks = workData.tasks.filter(t => t.day === key).sort((a,b) => Number(a.done)-Number(b.done) || ['高','中','低'].indexOf(a.priority)-['高','中','低'].indexOf(b.priority));
+  const finished = tasks.filter(t => t.done).length;
+  document.querySelector('#work-summary').textContent = tasks.length ? `${finished} / ${tasks.length} 件完了 🌷 今日の積み重ねが増えとるよ。` : '今日の仕事を追加してみよう 🌱';
+  workList.replaceChildren();
+  if (!tasks.length) {
+    const empty=document.createElement('li');empty.className='work-empty';empty.textContent='タスクはまだないよ。今日やりたいことをひとつ書いてみよう。';workList.append(empty);
+  }
+  for (const task of tasks) {
+    const li = document.createElement('li');li.className='work-task' + (task.done ? ' done' : '');
+    const check=document.createElement('input');check.type='checkbox';check.checked=task.done;check.setAttribute('aria-label',task.title+'を完了');check.addEventListener('change',()=>{task.done=check.checked;saveWork();renderWork()});
+    const details=document.createElement('div');details.className='work-task-body';
+    const title=document.createElement('div');title.className='work-task-title';title.textContent=task.title;
+    const meta=document.createElement('div');meta.className='work-meta';meta.textContent='優先度 '+task.priority+(task.due ? ' · 締切 '+task.due : '');
+    details.append(title,meta);
+    const remove=document.createElement('button');remove.type='button';remove.textContent='削除';remove.setAttribute('aria-label',task.title+'を削除');
+    remove.addEventListener('click',()=>{if (!confirm('このタスクを削除する？')) return;workData.tasks=workData.tasks.filter(t=>t!==task);saveWork();renderWork()});
+    li.append(check,details,remove);workList.append(li);
+  }
+  const note=workData.notes[key] || {};
+  workWins.value=typeof note.wins==='string'?note.wins:'';
+  workNext.value=typeof note.next==='string'?note.next:'';
+  document.querySelector('#work-status').textContent=workStorageError?'保存に失敗しました。入力内容を別に控えてください。':'仕事の記録はこのブラウザに保存されます。';
+}
+document.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener('click',()=>{
+  const isWork=button.dataset.tab==='work';
+  document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',String(b===button)));
+  document.querySelector('#habit-view').hidden=isWork;
+  document.querySelector('#work-view').hidden=!isWork;
+}));
+document.querySelector('#work-add').addEventListener('submit',event=>{
+  event.preventDefault();
+  const title=document.querySelector('#work-title').value.trim();
+  if (!title) return;
+  workData.tasks.push({id:String(Date.now())+'-'+Math.random().toString(36).slice(2),title:title.slice(0,120),day:workDate.value,priority:document.querySelector('#work-priority').value,due:document.querySelector('#work-due').value,done:false});
+  document.querySelector('#work-title').value='';
+  saveWork();renderWork();
+});
+workDate.addEventListener('change',()=>{if(workDate.validity.valid && workDate.value)renderWork()});
+for(const [area,field] of [[workWins,'wins'],[workNext,'next']])area.addEventListener('input',()=>{
+  const key=workDate.value;
+  workData.notes[key]={...(workData.notes[key]||{}),[field]:area.value.slice(0,2000)};
+  saveWork();
+});
+renderWork();
