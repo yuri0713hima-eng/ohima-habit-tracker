@@ -18,16 +18,9 @@ export function validRecords(value) {
   return Object.fromEntries(Object.entries(value).filter(([key, day]) => /^\d{4}-\d{2}-\d{2}$/.test(key) && day && typeof day === 'object').map(([key, day]) => [key, { ...Object.fromEntries(habits.map(habit => [habit.id, day[habit.id] === true])), ...(typeof day.memo === 'string' ? { memo: day.memo.slice(0, 2000) } : {}) }]));
 }
 
-// 未達成の当日はまだ取り組めるため、直前の日までの連続記録を表示する。
-export function streak(records, habitId, endKey, todayKey = dateKey(new Date())) {
-  const date = parseDate(endKey);
-  if (endKey === todayKey && records[endKey]?.[habitId] !== true) date.setDate(date.getDate() - 1);
-  let count = 0;
-  while (records[dateKey(date)]?.[habitId] === true) {
-    count++;
-    date.setDate(date.getDate() - 1);
-  }
-  return count;
+// 保存済みの記録を変更せず、選択日を含む過去の達成日を合計する。
+export function cumulativeDays(records, habitId, endKey) {
+  return Object.entries(records).filter(([key, day]) => key <= endKey && day?.[habitId] === true).length;
 }
 export function weekProgress(records, selected, todayKey) {
   const days = weekDates(selected).filter(day => day <= todayKey);

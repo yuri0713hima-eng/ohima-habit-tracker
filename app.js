@@ -1,4 +1,4 @@
-import { habits, dateKey, parseDate, weekDates, countDone, validRecords, streak, weekProgress } from './habits.mjs';
+import { habits, dateKey, parseDate, weekDates, countDone, validRecords, cumulativeDays, weekProgress } from './habits.mjs';
 
 const storageKey = 'ohima-habits-v1';
 let records = {};
@@ -31,7 +31,7 @@ function render() {
   document.querySelector('#encouragement').textContent = ['小さな一歩から、はじめよう。', 'いいスタート。その一歩が大切。', 'あとひとつ。自分のペースで。', 'すべて達成！今日もおつかれさま。'][count];
   document.querySelector('#habits').innerHTML = habits.map(habit => {
     const done = records[selected]?.[habit.id] === true;
-    return `<article class="habit ${habit.color} ${done ? 'completed' : ''}"><div class="habit-top"><span class="habit-icon" aria-hidden="true">${habit.icon}</span><span class="habit-number">0${habits.indexOf(habit) + 1}</span></div><p class="habit-english">${habit.english}</p><h3>${habit.name}</h3><p class="habit-description">${habit.description}</p><p class="streak">✿ <strong>${streak(records, habit.id, selected, today)}</strong> 日連続 <span>${selected === today ? '今日まで' : '選択日まで'}</span></p><button data-habit="${habit.id}" aria-pressed="${done}"><span aria-hidden="true">${done ? '✓' : '+'}</span> ${done ? '達成しました' : '達成を記録する'}</button></article>`;
+    return `<article class="habit ${habit.color} ${done ? 'completed' : ''}"><div class="habit-top"><span class="habit-icon" aria-hidden="true">${habit.icon}</span><span class="habit-number">0${habits.indexOf(habit) + 1}</span></div><p class="habit-english">${habit.english}</p><h3>${habit.name}</h3><p class="habit-description">${habit.description}</p><p class="streak">✿ <strong>${cumulativeDays(records, habit.id, selected)}</strong> 日達成（累計） <span>${selected === today ? '今日まで' : '選択日まで'}</span></p><button data-habit="${habit.id}" aria-pressed="${done}"><span aria-hidden="true">${done ? '✓' : '+'}</span> ${done ? '達成しました' : '達成を記録する'}</button></article>`;
   }).join('');
   const days = weekDates(selected);
   document.querySelector('#week-range').textContent = `${format(days[0])} — ${format(days[6])}`;
