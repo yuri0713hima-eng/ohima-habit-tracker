@@ -31,3 +31,37 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .work-footnote{font-size:11px;line-height:1.8;color:#839081}
 #work-status{min-height:18px;font-size:12px;color:#537a61}
 @media(max-width:700px){.work-panel{padding:17px}.work-head{display:block}.work-date{margin-top:8px}.work-fields{grid-template-columns:1fr 1fr}.work-fields input[type=text]{grid-column:1/-1}.work-fields button{grid-column:1/-1}.work-task{padding:11px}.work-task button{padding:7px 9px}}
+
+/* Gentle garden, calendar, and monthly report */
+.joy-panel{margin:28px 0;background:#fffefa;border:1px solid #e6e7dc;border-radius:23px;padding:27px;box-shadow:0 5px 20px #647d5010}
+.joy-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.joy-heading h2{font-size:20px;margin-top:9px}
+.joy-intro,.joy-caption{font-size:12px;color:#829180;line-height:1.9}
+.joy-hint{font-size:11px;background:#eff3e8;border-radius:40px;padding:8px 13px;color:#61806a}
+.garden-plants{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
+.garden-plant{border-radius:17px;background:linear-gradient(160deg,#f1f6ed,#f9f5f2);padding:15px 10px;text-align:center;min-width:0}
+.garden-plant:nth-child(2){background:linear-gradient(160deg,#f0ebf6,#faf5fa)}
+.garden-plant:nth-child(3){background:linear-gradient(160deg,#fcf3e6,#fffaf0)}
+.garden-visual{min-height:95px;display:flex;align-items:center;justify-content:center;align-content:center;flex-wrap:wrap;word-break:break-word;font-size:21px;line-height:1.6}
+.garden-plant strong{font-size:11px;color:#657766}
+.month-controls{display:flex;align-items:center;gap:8px}
+.month-controls button{border:1px solid #e2e6dc;border-radius:9px;background:#f2f6ee;min-height:40px;min-width:40px;font-size:22px;color:#567561}
+.month-controls button:disabled{opacity:.3}
+.month-controls strong{white-space:nowrap;font-size:13px}
+.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:16px 0}
+.month-weekday{text-align:center;font-size:11px;color:#899487;padding:7px 0}
+.month-day{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:62px;background:#f6f8f2;border:1px solid transparent;border-radius:12px;padding:4px;color:#465c4a;font:inherit}
+.month-day strong{font-size:13px}
+.month-day .month-symbols{font-size:11px;min-height:16px;letter-spacing:-1px}
+.month-day.is-selected{border-color:#89ab89;background:#e9f1e3}
+.month-day.is-today strong{color:#53835b}
+.month-day:disabled{opacity:.25}
+.month-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:#7b897a}
+.growth-report{display:grid;gap:16px;margin-top:22px}
+.growth-item{background:#f8f9f5;padding:15px;border-radius:15px}
+.growth-top{display:flex;justify-content:space-between;font-size:13px;gap:12px;color:#5b6e5b}
+.growth-track{height:10px;margin:10px 0;background:#e4e9de;border-radius:30px;overflow:hidden}
+.growth-fill{height:100%;border-radius:30px;background:#90b6a0}
+.growth-fill.purple{background:#b2a0c7}.growth-fill.orange{background:#d8b28b}
+.growth-item p{font-size:11px;color:#869282;margin:0}
+@media(max-width:700px){.joy-panel{padding:18px 14px}.garden-plants{gap:6px}.garden-plant{padding:12px 4px}.garden-visual{font-size:17px;min-height:89px}.garden-plant strong{font-size:10px}.month-grid{gap:3px}.month-day{min-height:54px;padding:3px 1px;border-radius:8px}.month-day .month-symbols{font-size:9px;letter-spacing:-2px}.joy-heading h2{font-size:18px}}
