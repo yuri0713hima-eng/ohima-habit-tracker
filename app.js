@@ -1,6 +1,7 @@
 import { habits, dateKey, parseDate, weekDates, countDone, validRecords, cumulativeDays, weekProgress } from './habits.mjs';
 
 const storageKey = 'ohima-habits-v1';
+let displayMonth = dateKey(new Date()).slice(0,7);
 let records = {};
 let storageError = false;
 try { records = validRecords(JSON.parse(localStorage.getItem(storageKey))); } catch { storageError = true; }
@@ -150,7 +151,6 @@ renderWork();
 
 
 /* Garden, month calendar and reports are read-only views of existing habit records. */
-let displayMonth = dateKey(new Date()).slice(0,7);
 function monthKeys(ym) {
   const [y,m]=ym.split('-').map(Number);
   const last=new Date(y,m,0).getDate();
