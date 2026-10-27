@@ -43,6 +43,7 @@ function render() {
   memoInput.value = records[selected]?.memo || '';
   document.querySelector('#memo-count').textContent = `${memoInput.value.length} / 2000`;
   showSaveStatus();
+  renderExtras();
 }
 
 document.querySelector('#habits').addEventListener('click', event => {
@@ -146,3 +147,84 @@ for(const [area,field] of [[workWins,'wins'],[workNext,'next']])area.addEventLis
   saveWork();
 });
 renderWork();
+
+
+/* Garden, month calendar and reports are read-only views of existing habit records. */
+let displayMonth = dateKey(new Date()).slice(0,7);
+function monthKeys(ym) {
+  const [y,m]=ym.split('-').map(Number);
+  const last=new Date(y,m,0).getDate();
+  return Array.from({length:last},(_,i)=>ym+'-'+String(i+1).padStart(2,'0'));
+}
+function shiftMonth(ym,delta) {
+  const [y,m]=ym.split('-').map(Number);
+  const d=new Date(y,m-1+delta,1);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+}
+function monthStats(ym) {
+  const today=dateKey(new Date());
+  const days=monthKeys(ym).filter(k=>k<=today);
+  return habits.map(h=>({habit:h,days:days.filter(k=>records[k]?.[h.id]===true).length}));
+}
+function renderExtras() {
+  const today=dateKey(new Date());
+  const selected=dateInput.value;
+  const total=habits.map(h=>({habit:h,count:cumulativeDays(records,h.id,selected)}));
+  const garden=document.querySelector('#garden-plants');
+  garden.replaceChildren();
+  const plantIcons=['🌿','💜','🌼'];
+  total.forEach(({habit,count},idx)=>{
+    const item=document.createElement('div');item.className='garden-plant';
+    const visual=document.createElement('div');visual.className='garden-visual';
+    // Show a small garden, not hundreds of nodes for long-term use.
+    const shown=Math.min(count,12);
+    visual.textContent=shown?Array.from({length:shown},(_,i)=>plantIcons[idx]).join(' '):'🌱';
+    const label=document.createElement('strong');label.textContent=habit.name+' · 累計'+count+'日';
+    item.append(visual,label);garden.append(item);
+  });
+  document.querySelector('#garden-caption').textContent='これまでの「できた」が、お庭を育てるよ。累計 '+total.reduce((s,x)=>s+x.count,0)+' 回の小さな一歩 🌷';
+  const todayMonth=today.slice(0,7);
+  document.querySelector('#month-next').disabled=displayMonth>=todayMonth;
+  const [year,month]=displayMonth.split('-').map(Number);
+  document.querySelector('#month-label').textContent=year+'年'+month+'月';
+  const grid=document.querySelector('#month-grid');
+  grid.replaceChildren();
+  for(const d of ['月','火','水','木','金','土','日']){
+    const span=document.createElement('span');span.className='month-weekday';span.textContent=d;grid.append(span);
+  }
+  const firstWeekday=(new Date(year,month-1,1).getDay()+6)%7;
+  for(let i=0;i<firstWeekday;i++){const blank=document.createElement('span');blank.className='month-blank';grid.append(blank);}
+  for(const key of monthKeys(displayMonth)){
+    const value=countDone(records,key);
+    const btn=document.createElement('button');btn.type='button';
+    btn.className='month-day'+(key===selected?' is-selected':'')+(key===today?' is-today':'');
+    btn.disabled=key>today;
+    const num=document.createElement('strong');num.textContent=String(Number(key.slice(-2)));
+    const flowers=document.createElement('span');flowers.className='month-symbols';
+    flowers.textContent=habits.filter(h=>records[key]?.[h.id]===true).map(h=>({gym:'🌱',study:'💜',reading:'📖'})[h.id]).join('') || '·';
+    btn.setAttribute('aria-label',key+' '+value+'件達成');
+    btn.append(num,flowers);
+    btn.addEventListener('click',()=>{dateInput.value=key;render();document.querySelector('.dashboard').scrollIntoView({behavior:'smooth',block:'start'});});
+    grid.append(btn);
+  }
+  const stats=monthStats(displayMonth);
+  const previous=monthStats(shiftMonth(displayMonth,-1));
+  const report=document.querySelector('#growth-report');report.replaceChildren();
+  stats.forEach(({habit,days},i)=>{
+    const row=document.createElement('div');row.className='growth-item';
+    const head=document.createElement('div');head.className='growth-top';
+    const name=document.createElement('span');name.textContent=habit.name;
+    const value=document.createElement('strong');value.textContent=days+'日';
+    head.append(name,value);
+    const track=document.createElement('div');track.className='growth-track';
+    const fill=document.createElement('div');fill.className='growth-fill '+habit.color;
+    fill.style.width=(days/monthKeys(displayMonth).length*100)+'%';track.append(fill);
+    const previousLabel=document.createElement('p');previousLabel.textContent='先月 '+previous[i].days+'日 · 今月 '+days+'日';
+    row.append(head,track,previousLabel);report.append(row);
+  });
+  const sum=stats.reduce((n,s)=>n+s.days,0);
+  document.querySelector('#report-caption').textContent=displayMonth+' の達成回数は合計 '+sum+' 回。頑張った日は、全部宝物だよ ✨';
+}
+document.querySelector('#month-prev').addEventListener('click',()=>{displayMonth=shiftMonth(displayMonth,-1);renderExtras();});
+document.querySelector('#month-next').addEventListener('click',()=>{if(displayMonth<dateKey(new Date()).slice(0,7)){displayMonth=shiftMonth(displayMonth,1);renderExtras();}});
+
