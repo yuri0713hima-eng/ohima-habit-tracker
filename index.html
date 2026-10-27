@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="おひまの習慣帳">
+  <meta name="description" content="ジム・TOEIC勉強・読書を記録する、やさしい習慣帳。">
+  <title>おひまの習慣帳</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <header><a class="brand" href="./">おひまの習慣帳<span>毎日の、小さな積み重ね。</span></a><span class="header-tag">わたしの習慣日記</span></header>
+  <main>
+    <section class="intro"><p class="eyebrow">毎日、ちょっとずつ。</p><h1>習慣を、少しずつ。</h1><p>昨日より少しだけ、自分にいいこと。<br>今日の小さな一歩を、ここに残そう。</p><div class="intro-mark" aria-hidden="true">✳</div></section>
+    <section class="dashboard" aria-label="習慣の記録">
+      <div class="day-heading"><div><p class="eyebrow">今日のできたを残そう</p><h2 id="day-title">今日の習慣</h2></div><div class="date-nav"><button id="previous" aria-label="前の日">←</button><label><span class="sr-only">記録する日付</span><input type="date" id="date"></label><button id="next" aria-label="次の日">→</button><button id="today">今日</button></div></div>
+      <div class="progress-panel"><div><span id="progress-label">0 / 3 達成</span><p id="encouragement">小さな一歩から、はじめよう。</p></div><div class="progress-track" role="progressbar" aria-label="選択日の達成率" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><div id="progress-fill"></div></div><span id="percentage">0%</span></div>
+      <div id="habits" class="habits"></div>
+      <section class="memo-panel" aria-labelledby="memo-title"><div class="section-heading"><label id="memo-title" for="memo">今日のひとこと <span>✎</span></label><span id="memo-count">0 / 2000</span></div><p>がんばったこと、気づいたこと。なんでも残してね。</p><textarea id="memo" maxlength="2000" rows="4" placeholder="例：TOEICの単語を20個覚えた。明日も少しずつ！"></textarea></section>
+      <p id="save-status" class="save-status" role="status">記録はこのブラウザに自動保存されます。</p>
+    </section>
+    <section class="weekly"><div class="section-heading"><div><p class="eyebrow">小さな一歩をふりかえる</p><h2>一週間の積み重ね</h2></div><span id="week-range"></span></div><p id="weekly-rate" class="weekly-rate"></p><p class="calendar-help">日付をタップすると、その日の記録を開けます。</p><div class="week-table-wrap"><table><caption class="sr-only">選択した日を含む月曜日から日曜日までの達成状況</caption><thead id="week-head"></thead><tbody id="week-body"></tbody></table></div><div class="week-footer"><span><i></i> 達成した日</span><p id="week-summary"></p></div></section>
+    <aside class="quote">“ 続けることが、いちばんの才能。 ”<span>完璧な毎日より、また始める今日を。</span></aside>
+  </main>
+  <footer><span class="brand">おひまの習慣帳</span><span>少しずつが、ちゃんと力になる。</span></footer>
+</body>
+</html>
