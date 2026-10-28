@@ -536,3 +536,9 @@ document.querySelector('#meeting-copy').addEventListener('click',async()=>{
  catch{const el=document.querySelector('#meeting-output');el.focus();el.select();meetingStatus.textContent='コピーができなかったので、選択された文章を長押しでコピーしてね。';}
 });
 renderMeeting();
+
+document.querySelector('#force-refresh')?.addEventListener('click',()=>{
+ const next=new URL('./index.html',location.href);
+ next.searchParams.set('refresh',String(Date.now()));
+ location.replace(next.href);
+});
