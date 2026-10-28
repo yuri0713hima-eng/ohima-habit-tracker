@@ -148,3 +148,8 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 }
 
 .backup-restore{margin-top:16px;padding-top:15px;border-top:1px solid #e3e9df;display:grid;gap:10px;min-width:0}.backup-restore label{font-size:14px;font-weight:700;color:#527b60}.backup-restore input{width:100%;min-width:0;max-width:100%;font-size:13px;box-sizing:border-box}.backup-restore .study-hint{overflow-wrap:anywhere}
+
+/* Four compact top navigation tabs */
+.tab-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.tab-nav button{min-width:0;white-space:nowrap}
+@media(max-width:700px){.tab-nav button{font-size:11px;padding:12px 2px}}
