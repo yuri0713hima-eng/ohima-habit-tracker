@@ -269,6 +269,12 @@ function renderStudy(){
   const list=document.querySelector('#study-items');list.replaceChildren();
   if(!items.length){const p=document.createElement('p');p.className='study-hint';p.textContent='まだ記録はないよ。今日の一歩を残してみよう！';list.append(p);}
   items.slice().reverse().forEach(x=>list.append(studyCard(x,true)));
+  const history=document.querySelector('#study-history');
+  history.replaceChildren();
+  const allEntries=studyRecords.slice().sort((a,b)=>b.day.localeCompare(a.day));
+  document.querySelector('#study-history-count').textContent=allEntries.length+'件の記録を保存中（Notionからの移行 '+allEntries.filter(x=>String(x.id).startsWith('notion-')).length+'件）';
+  if(!allEntries.length){const p=document.createElement('p');p.className='study-hint';p.textContent='まだ記録がないよ。Notionのファイルを取り込むとここに表示されるよ。';history.append(p);}
+  allEntries.forEach(x=>history.append(studyCard(x,false)));
   const review=document.querySelector('#study-review-items');review.replaceChildren();
   const pending=studyRecords.filter(x=>x.review===true).sort((a,b)=>b.day.localeCompare(a.day));
   if(!pending.length){const p=document.createElement('p');p.className='study-hint';p.textContent='復習マークを付けた内容がここに並ぶよ。';review.append(p);}
@@ -311,6 +317,7 @@ document.querySelector('#study-import').addEventListener('change',async event=>{
    localStorage.setItem(studyStorageKey,JSON.stringify(merged));
    studyRecords=merged;studyError=false;renderStudy();
    status.textContent=additions.length+'件の過去の記録を追加したよ 🌷（すでにあった'+(incoming.length-additions.length)+'件は重複を防止）';
+   document.querySelector('#study-history-section').scrollIntoView({behavior:'smooth',block:'start'});
  }catch(err){status.textContent='読み込めませんでした。記録は変更していません。 '+err.message;}
  event.target.value='';
 });
