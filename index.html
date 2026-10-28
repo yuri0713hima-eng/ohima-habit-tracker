@@ -9,7 +9,7 @@
   <meta name="description" content="ジム・TOEIC勉強・読書を記録する、やさしい習慣帳。">
   <title>おひまの習慣帳</title>
   <link rel="stylesheet" href="style.css?v=study-width-fix-20261028">
-  <script src="app.js?v=review-analysis-20261028" type="module"></script>
+  <script src="app.js?v=clear-test-20261028" type="module"></script>
 </head>
 <body>
   <header><a class="brand" href="./">おひまの習慣帳<span>毎日の、小さな積み重ね。</span></a><span class="header-tag">わたしの習慣日記</span></header>
@@ -45,7 +45,7 @@
       <p id="study-save-status" role="status" class="study-hint"></p>
     </section>
     <section class="study-card"><div class="study-summary" id="study-summary"></div><h2>この日の学習記録 🌷</h2><div id="study-items" class="study-items"></div></section>
-    <section class="study-card"><h2>学習履歴 📅</h2><p class="study-hint">過去の勉強を一覧で確認できるよ。</p><button type="button" id="study-history-open" class="study-submit">すべての勉強履歴を見る →</button></section><section class="study-card" id="study-history-section" hidden><button type="button" id="study-history-back" class="study-back">← 勉強記録に戻る</button><h2>すべての勉強履歴 📅</h2><p id="study-history-count" class="study-hint"></p><div id="study-history" class="study-items"></div></section><section class="study-card" id="study-review-section"><h2>苦手・復習リスト 📝</h2><p class="study-hint">Notionの学習メモから見つけた苦手分野もまとめたよ。</p><div id="study-analysis" class="study-items"></div><p class="study-hint">復習したい記録が、日付をまたいで一覧になるよ。</p><div id="study-review-items" class="study-items"></div></section>
+    <section class="study-card"><h2>学習履歴 📅</h2><p class="study-hint">過去の勉強を一覧で確認できるよ。</p><button type="button" id="study-history-open" class="study-submit">すべての勉強履歴を見る →</button></section><section class="study-card" id="study-history-section" hidden><button type="button" id="study-history-back" class="study-back">← 勉強記録に戻る</button><h2>すべての勉強履歴 📅</h2><p id="study-history-count" class="study-hint"></p><div id="study-history" class="study-items"></div></section><section class="study-card" id="study-review-section"><h2>苦手・復習リスト 📝</h2><p class="study-hint">Notionの学習メモから見つけた苦手分野もまとめたよ。</p><p class="study-hint">確認テストで全問正解を別々の日に2回できたら、自動でクリア済みに移動するよ。※リスニングは実際の音声確認が必要なので手動判定。</p><div id="study-analysis" class="study-items"></div><details class="study-cleared"><summary>🌸 クリア済みの復習を見る <span id="study-cleared-count"></span></summary><div id="study-cleared-list" class="study-items"></div></details><p class="study-hint">復習したい記録が、日付をまたいで一覧になるよ。</p><div id="study-review-items" class="study-items"></div></section>
     <section class="study-card"><h2>Notionの記録を取り込む 📥</h2><p class="study-hint">移行用JSONファイルを選ぶと、過去の記録を追加するよ。すでにある勉強記録は消さず、同じ移行データの二重登録も防ぐよ。</p><input type="file" id="study-import" accept=".json,application/json" aria-label="Notionの学習記録移行ファイル"><p id="study-import-status" class="study-hint" role="status"></p></section>
     <section class="study-card"><h2>記録のバックアップ 🔐</h2><p class="study-hint">このアプリの習慣・お仕事・勉強データはiPhone内に保存されるよ。大切な記録は時々ファイルに控えよう。</p><button type="button" id="study-export" class="study-submit">すべての記録をJSONで保存</button></section>
   </section>
