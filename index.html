@@ -11,12 +11,12 @@
   <link rel="icon" type="image/png" href="ohima-icon.png?v=cat-20261028">
   <meta name="description" content="ジム・TOEIC勉強・読書を記録する、やさしい習慣帳。">
   <title>おひまの習慣帳</title>
-  <link rel="stylesheet" href="style.css?v=refresh-subtle-20261028">
+  <link rel="stylesheet" href="style.css?v=refresh-icon-20261028">
   <script src="app.js?v=refresh-20261028-2" type="module"></script>
 </head>
 <body>
   <header><a class="brand" href="./">おひまの習慣帳<span>毎日の、小さな積み重ね。</span></a><span class="header-tag">わたしの習慣日記</span></header>
-  <main><div class="refresh-strip"><span>画面が古いときは</span><button type="button" id="force-refresh">最新版を表示 ↻</button></div>
+  <main><div class="refresh-strip"><button type="button" id="force-refresh" aria-label="最新版に更新" title="最新版に更新">↻</button></div>
     <nav class="tab-nav" aria-label="表示する手帳"><button type="button" data-tab="habits" aria-selected="true">🌷 習慣帳</button><button type="button" data-tab="study" aria-selected="false">📚 勉強記録</button><button type="button" data-tab="work" aria-selected="false">💼 お仕事</button><button type="button" data-tab="other" aria-selected="false">⚙️ その他</button></nav><div id="habit-view"><section class="intro"><p class="eyebrow">毎日、ちょっとずつ。</p><h1>習慣を、少しずつ。</h1><p>昨日より少しだけ、自分にいいこと。<br>今日の小さな一歩を、ここに残そう。</p><div class="intro-mark" aria-hidden="true">✳</div></section>
     <section class="dashboard" aria-label="習慣の記録">
       <div class="day-heading"><div><p class="eyebrow">今日のできたを残そう</p><h2 id="day-title">今日の習慣</h2></div><div class="date-nav"><button id="previous" aria-label="前の日">←</button><label><span class="sr-only">記録する日付</span><input type="date" id="date"></label><button id="next" aria-label="次の日">→</button><button id="today">今日</button></div></div>
