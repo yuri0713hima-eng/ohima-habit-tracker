@@ -130,10 +130,12 @@ function renderWork() {
 document.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener('click',()=>{
   const isWork=button.dataset.tab==='work';
   const isStudy=button.dataset.tab==='study';
+  const isOther=button.dataset.tab==='other';
   document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',String(b===button)));
-  document.querySelector('#habit-view').hidden=isWork || isStudy;
+  document.querySelector('#habit-view').hidden=isWork || isStudy || isOther;
   document.querySelector('#work-view').hidden=!isWork;
   document.querySelector('#study-view').hidden=!isStudy;
+  document.querySelector('#other-view').hidden=!isOther;
 }));
 document.querySelector('#work-add').addEventListener('submit',event=>{
   event.preventDefault();
