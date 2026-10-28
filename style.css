@@ -153,3 +153,5 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .tab-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
 .tab-nav button{min-width:0;white-space:nowrap}
 @media(max-width:700px){.tab-nav button{font-size:11px;padding:12px 2px}}
+
+.refresh-strip{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;padding:5px 0;font-size:11px;color:#7a8779}.refresh-strip button{border:1px solid #d8e3d6;border-radius:999px;background:#f2f7ef;color:#4d7659;padding:7px 11px;font:inherit;font-weight:700}
