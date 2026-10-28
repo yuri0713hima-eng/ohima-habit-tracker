@@ -105,3 +105,12 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .study-page #study-analysis .study-entry strong{color:#537f63}
 .study-page #study-analysis .study-entry p{overflow-wrap:anywhere}
 .study-page #study-history-section .study-entry{overflow-wrap:anywhere}
+
+.review-quiz{margin-top:13px;border-top:1px solid #e5eade;padding-top:12px}
+.review-quiz summary,.study-cleared summary{cursor:pointer;font-weight:650;color:#55765d;font-size:13px;padding:10px 0}
+.review-quiz-form{display:grid;gap:12px;margin-top:12px}
+.review-quiz-form fieldset{border:1px solid #e5ebdf;border-radius:12px;padding:12px;min-width:0}
+.review-quiz-form legend{font-size:13px;font-weight:600;padding:0 5px;white-space:normal}
+.review-quiz-form label{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:13px;line-height:1.5}
+.review-quiz-form input{accent-color:#688c73}
+.study-cleared{border-top:1px solid #e6ebe0;margin-top:18px;padding-top:10px}
