@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-title" content="おひまの習慣帳">
   <meta name="description" content="ジム・TOEIC勉強・読書を記録する、やさしい習慣帳。">
   <title>おひまの習慣帳</title>
-  <link rel="stylesheet" href="style.css?v=clear-test-20261028">
-  <script src="app.js?v=clear-test-20261028" type="module"></script>
+  <link rel="stylesheet" href="style.css?v=meeting-20261028">
+  <script src="app.js?v=meeting-20261028" type="module"></script>
 </head>
 <body>
   <header><a class="brand" href="./">おひまの習慣帳<span>毎日の、小さな積み重ね。</span></a><span class="header-tag">わたしの習慣日記</span></header>
@@ -61,6 +61,16 @@
         <button type="submit">＋ 追加</button>
       </form>
       <ul id="work-list" class="work-list"></ul>
+    </section>
+    <section class="work-panel meeting-panel" aria-labelledby="meeting-heading">
+      <p class="eyebrow">MEETING NOTEBOOK</p><h2 id="meeting-heading">会議メモ帳 📝</h2>
+      <p class="meeting-help">思いついた時にメモを追加。月ごと・会議ごとに整理して、会議前にまとめてコピーできるよ。</p>
+      <div class="meeting-controls"><label>会議の種類<select id="meeting-type"><option value="staff">👥 職員会議</option><option value="menu">🍽️ 献立会議</option></select></label><label>対象の月<input id="meeting-month" type="month"></label></div>
+      <form id="meeting-add" class="meeting-form"><label>メモすること<textarea id="meeting-input" rows="3" maxlength="2000" required placeholder="例：2歳児の食具の使い方について共有する"></textarea></label><button type="submit" class="study-submit">＋ メモを追加</button></form>
+      <p id="meeting-status" role="status" class="study-hint"></p>
+      <h3>今月のメモ <span id="meeting-count"></span></h3><div id="meeting-list" class="meeting-list"></div>
+      <details class="meeting-summary"><summary>📋 会議用にまとめる</summary><p class="meeting-help">記録した内容を議題と共有事項に整理した下書き。内容を確認してから会議で使ってね。</p><textarea id="meeting-output" readonly rows="9" aria-label="会議用まとめ"></textarea><button type="button" id="meeting-copy" class="study-submit">まとめをコピー</button></details>
+      <p class="work-footnote">園児や保護者の氏名、病名など個人情報は入力せず、匿名のメモにしてね。記録はこのiPhoneのブラウザに保存されるため、端末変更や履歴削除に備えて大切な会議メモはコピーして控えてね。</p>
     </section>
     <section class="work-panel work-reflection" aria-labelledby="work-growth-heading">
       <p class="eyebrow">GROW AT YOUR OWN PACE</p><h2 id="work-growth-heading">保育士レベルアップ記録 🌼</h2>
