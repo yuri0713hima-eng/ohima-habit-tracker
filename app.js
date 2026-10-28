@@ -292,11 +292,63 @@ document.querySelector('#study-form').addEventListener('submit',e=>{
   document.querySelector('#study-note').value='';
   document.querySelector('#study-review').checked=false;
 });
+const backupKeys={habits:storageKey,work:workStorageKey,study:studyStorageKey,meetings:'ohima-meetings-v1',review:'ohima-review-progress-v1'};
 document.querySelector('#study-export').addEventListener('click',()=>{
-  const payload={exportedAt:new Date().toISOString(),habits:localStorage.getItem(storageKey),work:localStorage.getItem(workStorageKey),study:localStorage.getItem(studyStorageKey)};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='ohima-backup-'+dateKey(new Date())+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+ const payload={format:'ohima-backup-v2',exportedAt:new Date().toISOString()};
+ for(const [label,key] of Object.entries(backupKeys))payload[label]=localStorage.getItem(key);
+ if(Object.entries(backupKeys).every(([,key])=>localStorage.getItem(key)===null)){alert('この画面には保存された記録が見つからなかったよ。普段使っているホーム画面のアプリから開いてね。');return;}
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='ohima-backup-'+dateKey(new Date())+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+ document.querySelector('#backup-status').textContent='バックアップを作ったよ。ファイルを「ファイル」アプリに保存してね。';
 });
+document.querySelector('#backup-import').addEventListener('change',async event=>{
+ const input=event.target,status=document.querySelector('#backup-status');const file=input.files?.[0];if(!file)return;
+ try{
+  if(file.size>3000000)throw Error('ファイルが大きすぎます。');
+  const data=JSON.parse(await file.text());
+  if(!data||typeof data!=='object'||Array.isArray(data))throw Error('形式が正しくありません。');
+  const parsed={};
+  for(const [label,key] of Object.entries(backupKeys)){
+   if(data[label]===undefined||data[label]===null)continue;
+   if(typeof data[label]!=='string')throw Error(label+'のデータ形式が違います。');
+   const val=JSON.parse(data[label]);if(!val||typeof val!=='object'||Array.isArray(val)&&!['study','meetings'].includes(label))throw Error(label+'の構造が違います。');
+   if(['study','meetings'].includes(label)&&!Array.isArray(val))throw Error(label+'の構造が違います。');
+   parsed[label]=val;
+  }
+  const labels={habits:'習慣',work:'仕事',study:'勉強',meetings:'会議',review:'復習'};
+  const counts=Object.entries(parsed).map(([label,val])=>labels[label]+': '+(Array.isArray(val)?val.length:label==='work'?(val.tasks?.length||0)+'件の仕事＋メモ':Object.keys(val).length)+'件');
+  if(!counts.length)throw Error('このファイルには復元できる記録がありません。');
+  if(!confirm('復元する内容：\\n'+counts.join('\\n')+'\\n\\n今の記録は残し、追加・不足分の補完を行います。復元する？')){status.textContent='復元をキャンセルしたよ。';return;}
+  const updates={};
+  for(const [label,incoming] of Object.entries(parsed)){
+   const key=backupKeys[label];let current;
+   try{current=JSON.parse(localStorage.getItem(key));}catch{}
+   if(label==='study'||label==='meetings'){
+    const old=Array.isArray(current)?current:[];
+    const ids=new Set(old.map(x=>String(x.id||'')));
+    updates[key]=JSON.stringify(old.concat(incoming.filter(x=>x&&typeof x==='object'&&typeof x.id==='string'&&!ids.has(x.id)&&ids.add(x.id))));
+   }else if(label==='habits'){
+    updates[key]=JSON.stringify({...incoming,...(current&&typeof current==='object'&&!Array.isArray(current)?current:{})});
+   }else if(label==='work'){
+    const old=current&&typeof current==='object'&&!Array.isArray(current)?current:{};
+    const oldTasks=Array.isArray(old.tasks)?old.tasks:[];
+    const incomingTasks=Array.isArray(incoming.tasks)?incoming.tasks:[];
+    const ids=new Set(oldTasks.map(x=>String(x.id||'')));
+    updates[key]=JSON.stringify({...incoming,...old,tasks:oldTasks.concat(incomingTasks.filter(x=>x&&typeof x.id==='string'&&!ids.has(x.id)&&ids.add(x.id))),notes:{...(incoming.notes||{}),...(old.notes||{})}});
+   }else{
+    updates[key]=JSON.stringify({...incoming,...(current&&typeof current==='object'&&!Array.isArray(current)?current:{})});
+   }
+  }
+  // Preflight storage capacity before applying. Roll back values on write error.
+  const previous=Object.fromEntries(Object.keys(updates).map(key=>[key,localStorage.getItem(key)]));
+  try{for(const [key,value] of Object.entries(updates))localStorage.setItem(key,value);}
+  catch(err){for(const [key,value] of Object.entries(previous)){try{if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,value);}catch{}}throw Error('保存容量などの問題で復元に失敗しました。');}
+  status.textContent='復元できたよ！画面を更新して記録を確認してね 🌷';
+  alert('復元できたよ！ページを再読み込みすると全データが表示されるよ。');
+ }catch(err){status.textContent='復元できませんでした：'+err.message;}
+ finally{input.value='';}
+});
+
 renderStudy();
 
 
