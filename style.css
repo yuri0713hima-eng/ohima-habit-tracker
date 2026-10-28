@@ -74,12 +74,16 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .study-hero p:not(.eyebrow){font-size:13px;color:#758274;line-height:1.9}
 .study-hero label{display:flex;align-items:center;gap:12px;font-size:13px;color:#5e705f}
 .study-hero input,.study-form input,.study-form select,.study-form textarea{border:1px solid #dae0d5;background:#fffefa;border-radius:11px;padding:12px;font:inherit;font-size:16px;color:#3e5544;max-width:100%}
-.study-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-.study-form label{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:600}
+.study-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px;min-width:0}
+.study-form label{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:600;min-width:0}
+.study-page,.study-hero,.study-card{min-width:0}
+.study-hero input,.study-form input:not([type=checkbox]),.study-form select,.study-form textarea{box-sizing:border-box;width:100%;min-width:0;max-width:100%}
+.study-hero input{flex:1}
+.study-hero label{min-width:0}
 .study-form label:nth-child(2),.study-form label:nth-child(4){grid-column:1/-1}
 .study-form textarea{resize:vertical;min-height:90px}
 .study-form .study-check{flex-direction:row;align-items:center;grid-column:1/-1;font-weight:400}
-.study-check input{width:20px;height:20px;accent-color:#789c82}
+.study-check input{width:20px;height:20px;flex-shrink:0;accent-color:#789c82}
 .study-submit{grid-column:1/-1;min-height:46px;padding:11px 18px;border:0;border-radius:12px;background:#678d74;color:white;font:inherit;font-weight:700}
 .study-summary{padding:13px;background:#edf3e9;border-radius:12px;color:#577260;font-size:13px;margin-bottom:18px}
 .study-items{display:grid;gap:10px;margin-top:14px}
@@ -92,4 +96,4 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .study-entry-bottom .study-check{display:flex;align-items:center;gap:6px;font-size:12px}
 .study-entry-bottom button{border:0;background:#f3e8e6;color:#9d6662;border-radius:8px;padding:8px 12px}
 .study-hint{font-size:12px!important;color:#839083!important;line-height:1.8}
-@media(max-width:700px){.tab-nav{gap:3px;padding:4px}.tab-nav button{font-size:11px;padding:13px 3px}.study-hero,.study-card{padding:18px}.study-form{grid-template-columns:1fr}.study-form label{grid-column:1/-1}}
+@media(max-width:700px){.tab-nav{gap:3px;padding:4px}.tab-nav button{font-size:11px;padding:13px 3px}.study-hero,.study-card{padding:18px}.study-form{grid-template-columns:minmax(0,1fr)}.study-form label{grid-column:1/-1}}
