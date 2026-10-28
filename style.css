@@ -161,3 +161,5 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .refresh-strip span{display:none}
 .refresh-strip button{background:transparent;border:0;padding:5px 6px;color:#9ca99b;font-size:11px;font-weight:400;opacity:.8}
 .refresh-strip button:hover,.refresh-strip button:focus-visible{opacity:1;color:#54765a}
+
+.refresh-strip{padding:0 3px 3px;justify-content:flex-end}.refresh-strip button{font-size:17px;line-height:1;padding:5px;color:#a8b4a6;background:transparent;border:0;opacity:.7}
