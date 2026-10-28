@@ -131,7 +131,7 @@ document.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener(
   const isWork=button.dataset.tab==='work';
   const isStudy=button.dataset.tab==='study';
   document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',String(b===button)));
-  document.querySelector('#habit-view').hidden=isWork;
+  document.querySelector('#habit-view').hidden=isWork || isStudy;
   document.querySelector('#work-view').hidden=!isWork;
   document.querySelector('#study-view').hidden=!isStudy;
 }));
