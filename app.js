@@ -321,3 +321,36 @@ document.querySelector('#study-import').addEventListener('change',async event=>{
  }catch(err){status.textContent='読み込めませんでした。記録は変更していません。 '+err.message;}
  event.target.value='';
 });
+
+
+const studyWeaknesses=[
+ {title:'銀フレ｜意味・スペルが混同しやすい単語',detail:'recognize / definitely / specific / appropriate / outstanding / decline / renovate',task:'英文の中で意味を言う → 英単語を自力で書く（7語）',days:'10/13〜10/26に繰り返し登場'},
+ {title:'英文法｜比較級・最上級',detail:'as ... as / any other＋単数 / three times as ... as / much＋比較級 / little→less→least',task:'短い英作文を4問。theの付け忘れにも注意',days:'10/15〜10/21の演習で課題'},
+ {title:'英文法｜時制と過去完了',detail:'had had と had been having / had eaten と had been eating / 過去形と過去進行形',task:'2つの英文の違いを説明する練習を4問',days:'9/2、10/12〜10/14のメモ'},
+ {title:'英文法｜受動態・前置詞',detail:'受動態のby / to / for、SVOOの受け身、前置詞付きの受け身',task:'Lesson22〜23の間違えた箇所を3〜4問復習',days:'10/22〜10/24のメモ'},
+ {title:'リスニング｜短い音のつながり',detail:'destination / vehicle / tires と tired / these tires / to the third / usual room',task:'公式問題集11 Part2 7〜9番を英文を見ずに聞く',days:'10/27のPart2復習メモ'}
+];
+function renderWeaknessAnalysis(){
+ const target=document.querySelector('#study-analysis');
+ target.replaceChildren();
+ for(const w of studyWeaknesses){
+  const card=document.createElement('article');card.className='study-entry';
+  const h=document.createElement('strong');h.textContent=w.title;
+  const detail=document.createElement('p');detail.textContent=w.detail;
+  const task=document.createElement('p');task.textContent='🎯 '+w.task;
+  const src=document.createElement('p');src.className='study-hint';src.textContent='根拠：Notion '+w.days;
+  card.append(h,detail,task,src);target.append(card);
+ }
+}
+renderWeaknessAnalysis();
+const studyView=document.querySelector('#study-view');
+document.querySelector('#study-history-open').addEventListener('click',()=>{
+ studyView.classList.add('history-open');
+ document.querySelector('#study-history-section').hidden=false;
+ document.querySelector('#study-history-section').scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.querySelector('#study-history-back').addEventListener('click',()=>{
+ studyView.classList.remove('history-open');
+ document.querySelector('#study-history-section').hidden=true;
+ studyView.scrollIntoView({behavior:'smooth',block:'start'});
+});
