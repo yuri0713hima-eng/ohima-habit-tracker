@@ -8,13 +8,13 @@
   <meta name="apple-mobile-web-app-title" content="おひまの習慣帳">
   <meta name="description" content="ジム・TOEIC勉強・読書を記録する、やさしい習慣帳。">
   <title>おひまの習慣帳</title>
-  <link rel="stylesheet" href="style.css?v=joy-20261028">
-  <script src="app.js?v=joy-20261028" type="module"></script>
+  <link rel="stylesheet" href="style.css?v=study-20261028">
+  <script src="app.js?v=study-20261028" type="module"></script>
 </head>
 <body>
   <header><a class="brand" href="./">おひまの習慣帳<span>毎日の、小さな積み重ね。</span></a><span class="header-tag">わたしの習慣日記</span></header>
   <main>
-    <nav class="tab-nav" aria-label="表示する手帳"><button type="button" data-tab="habits" aria-selected="true">🌷 習慣帳</button><button type="button" data-tab="work" aria-selected="false">💼 お仕事</button></nav><div id="habit-view"><section class="intro"><p class="eyebrow">毎日、ちょっとずつ。</p><h1>習慣を、少しずつ。</h1><p>昨日より少しだけ、自分にいいこと。<br>今日の小さな一歩を、ここに残そう。</p><div class="intro-mark" aria-hidden="true">✳</div></section>
+    <nav class="tab-nav" aria-label="表示する手帳"><button type="button" data-tab="habits" aria-selected="true">🌷 習慣帳</button><button type="button" data-tab="study" aria-selected="false">📚 勉強記録</button><button type="button" data-tab="work" aria-selected="false">💼 お仕事</button></nav><div id="habit-view"><section class="intro"><p class="eyebrow">毎日、ちょっとずつ。</p><h1>習慣を、少しずつ。</h1><p>昨日より少しだけ、自分にいいこと。<br>今日の小さな一歩を、ここに残そう。</p><div class="intro-mark" aria-hidden="true">✳</div></section>
     <section class="dashboard" aria-label="習慣の記録">
       <div class="day-heading"><div><p class="eyebrow">今日のできたを残そう</p><h2 id="day-title">今日の習慣</h2></div><div class="date-nav"><button id="previous" aria-label="前の日">←</button><label><span class="sr-only">記録する日付</span><input type="date" id="date"></label><button id="next" aria-label="次の日">→</button><button id="today">今日</button></div></div>
       <div class="progress-panel"><div><span id="progress-label">0 / 3 達成</span><p id="encouragement">小さな一歩から、はじめよう。</p></div><div class="progress-track" role="progressbar" aria-label="選択日の達成率" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><div id="progress-fill"></div></div><span id="percentage">0%</span></div>
@@ -29,6 +29,25 @@
     <section class="joy-panel" aria-labelledby="report-title"><div class="joy-heading"><div><p class="eyebrow">LOOK HOW FAR YOU'VE COME</p><h2 id="report-title">今月の成長レポート ✨</h2></div></div><p class="joy-intro">達成した日を数えるだけ。休んだ日を責めない成長記録。</p><div id="growth-report" class="growth-report"></div><p id="report-caption" class="joy-caption"></p></section>
     <aside class="quote">“ 続けることが、いちばんの才能。 ”<span>完璧な毎日より、また始める今日を。</span></aside>
   </div>
+
+  <section id="study-view" class="study-page" hidden>
+    <div class="study-hero"><p class="eyebrow">MY ENGLISH JOURNAL</p><h1>英語の勉強記録 📚</h1><p>銀フレも文法も公式問題集も、頑張った内容を教材ごとに残せる手帳。</p><label>記録日 <input id="study-date" type="date" aria-label="勉強した日"></label></div>
+    <section class="study-card">
+      <h2>今日の勉強を記録 ✍️</h2>
+      <form id="study-form" class="study-form">
+        <label>教材 <select id="study-book"><option>銀フレ</option><option>青い中学英文法</option><option>Grammar in Use</option><option>公式問題集11</option><option>Duolingo</option><option>その他</option></select></label>
+        <label>学習範囲・内容 <input id="study-scope" type="text" maxlength="160" required placeholder="例：701〜720 / Part 2 問7〜9"></label>
+        <label>勉強時間（分）<input id="study-minutes" type="number" min="0" max="600" value="10" required></label>
+        <label>ひとこと・気づいたこと <textarea id="study-note" rows="3" maxlength="1500" placeholder="例：venue がまだ苦手。例文で復習する！"></textarea></label>
+        <label class="study-check"><input id="study-review" type="checkbox"> あとで復習したい</label>
+        <button type="submit" class="study-submit">＋ 今日の記録に追加</button>
+      </form>
+      <p id="study-save-status" role="status" class="study-hint"></p>
+    </section>
+    <section class="study-card"><div class="study-summary" id="study-summary"></div><h2>この日の学習記録 🌷</h2><div id="study-items" class="study-items"></div></section>
+    <section class="study-card"><h2>苦手・復習リスト 📝</h2><p class="study-hint">復習したい記録が、日付をまたいで一覧になるよ。</p><div id="study-review-items" class="study-items"></div></section>
+    <section class="study-card"><h2>記録のバックアップ 🔐</h2><p class="study-hint">このアプリの習慣・お仕事・勉強データはiPhone内に保存されるよ。大切な記録は時々ファイルに控えよう。</p><button type="button" id="study-export" class="study-submit">すべての記録をJSONで保存</button></section>
+  </section>
   <div id="work-view" hidden>
     <section class="work-panel" aria-labelledby="work-heading">
       <div class="work-head"><div><p class="eyebrow">MY WORK DIARY</p><h1 id="work-heading">おひまのお仕事手帳 🌱</h1><p>優先順位を決めて、今日の仕事を少しずつ。<br>完了したことも、次に活かしたいことも残そう。</p></div><label>記録日 <input class="work-date" id="work-date" type="date" aria-label="仕事の記録日"></label></div>
