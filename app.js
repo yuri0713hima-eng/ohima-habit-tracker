@@ -330,18 +330,88 @@ const studyWeaknesses=[
  {title:'英文法｜受動態・前置詞',detail:'受動態のby / to / for、SVOOの受け身、前置詞付きの受け身',task:'Lesson22〜23の間違えた箇所を3〜4問復習',days:'10/22〜10/24のメモ'},
  {title:'リスニング｜短い音のつながり',detail:'destination / vehicle / tires と tired / these tires / to the third / usual room',task:'公式問題集11 Part2 7〜9番を英文を見ずに聞く',days:'10/27のPart2復習メモ'}
 ];
+
+const reviewProgressKey='ohima-review-progress-v1';
+let reviewProgress={};
+try{const saved=JSON.parse(localStorage.getItem(reviewProgressKey));if(saved&&typeof saved==='object'&&!Array.isArray(saved))reviewProgress=saved;}catch{}
+const reviewQuestions=[
+ [
+  ['「認識する」は？',['recognize','renovate','reputation'],0],
+  ['「間違いなく」は？',['specific','definitely','decline'],1],
+  ['「適切な」は？',['appropriate','outstanding','particular'],0]
+ ],
+ [
+  ['This car is ___ faster than mine.',['many','much','most'],1],
+  ['He is taller than any other ___ in the class.',['boy','boys','boyes'],0],
+  ['little の比較級は？',['least','less','lesser'],1]
+ ],
+ [
+  ['I ___ dinner before she arrived.',['had eaten','have eat','had eating'],0],
+  ['I ___ for an hour when it rained.',['had been walking','have walked','had been walk'],0],
+  ['「私はその本を持っていた」過去完了形は？',['I had been having the book','I had had the book','I have had book'],1]
+ ],
+ [
+  ['The letter was written ___ Ken.',['to','for','by'],2],
+  ['She was given a gift ___ her friend.',['by','to','at'],0],
+  ['A gift was given ___ her.',['by','to','for'],1]
+ ]
+];
+function storeReviewProgress(){try{localStorage.setItem(reviewProgressKey,JSON.stringify(reviewProgress));}catch{alert('復習の結果を保存できませんでした。ブラウザの空き容量を確認してね。');}}
 function renderWeaknessAnalysis(){
  const target=document.querySelector('#study-analysis');
- target.replaceChildren();
- for(const w of studyWeaknesses){
+ const cleared=document.querySelector('#study-cleared-list');
+ target.replaceChildren();cleared.replaceChildren();
+ let completed=0;
+ studyWeaknesses.forEach((w,i)=>{
+  const prog=reviewProgress[i]||{passes:[]};
+  const passes=Array.isArray(prog.passes)?prog.passes:[];
+  const done=prog.done===true;
+  if(done)completed++;
   const card=document.createElement('article');card.className='study-entry';
   const h=document.createElement('strong');h.textContent=w.title;
   const detail=document.createElement('p');detail.textContent=w.detail;
   const task=document.createElement('p');task.textContent='🎯 '+w.task;
   const src=document.createElement('p');src.className='study-hint';src.textContent='根拠：Notion '+w.days;
-  card.append(h,detail,task,src);target.append(card);
- }
+  card.append(h,detail,task,src);
+  const status=document.createElement('p');status.className='study-hint';status.textContent=done?'🌸 復習クリア！':i===4?'音声の聞き取りが必要なため、チャットで確認後にクリアにしてね。':'確認テスト全問正解 '+Math.min(2,passes.length)+'/2日';card.append(status);
+  if(done){
+    const undo=document.createElement('button');undo.type='button';undo.className='study-back';undo.textContent='もう一度復習する';
+    undo.addEventListener('click',()=>{reviewProgress[i]={passes:[],done:false};storeReviewProgress();renderWeaknessAnalysis();});
+    card.append(undo);cleared.append(card);return;
+  }
+  if(i===4){
+   const button=document.createElement('button');button.type='button';button.className='study-back';button.textContent='ちゃっぴーと音声復習ができたのでクリア';
+   button.addEventListener('click',()=>{if(!confirm('実際の音声で聞き取れることを確認した？'))return;reviewProgress[i]={passes:[],done:true};storeReviewProgress();renderWeaknessAnalysis();});
+   card.append(button);target.append(card);return;
+  }
+  const details=document.createElement('details');details.className='review-quiz';
+  const summary=document.createElement('summary');summary.textContent='✏️ 3問の確認テストを受ける';details.append(summary);
+  const form=document.createElement('form');form.className='review-quiz-form';
+  reviewQuestions[i].forEach((q,qi)=>{
+    const field=document.createElement('fieldset');const legend=document.createElement('legend');legend.textContent=(qi+1)+'. '+q[0];field.append(legend);
+    q[1].forEach((answer,ai)=>{
+      const label=document.createElement('label');const radio=document.createElement('input');radio.type='radio';radio.name='review-'+i+'-'+qi;radio.value=String(ai);radio.required=true;
+      label.append(radio,document.createTextNode(' '+answer));field.append(label);
+    });form.append(field);
+  });
+  const submit=document.createElement('button');submit.type='submit';submit.className='study-submit';submit.textContent='採点する';form.append(submit);
+  const output=document.createElement('p');output.className='study-hint';output.setAttribute('role','status');form.append(output);
+  form.addEventListener('submit',ev=>{
+    ev.preventDefault();const answers=reviewQuestions[i].map((q,qi)=>Number(new FormData(form).get('review-'+i+'-'+qi)));
+    const correct=answers.filter((a,qi)=>a===reviewQuestions[i][qi][2]).length;
+    if(correct<3){output.textContent=correct+'/3 正解。間違えた問題を見直して、もう一度挑戦しよう！';return;}
+    const today=dateKey(new Date());
+    const state=reviewProgress[i]||{passes:[]};const previous=Array.isArray(state.passes)?state.passes:[];
+    if(previous.includes(today)){output.textContent='3/3 正解！今日の合格は記録済み。別の日にもう一度満点を取ろう 🌱';return;}
+    const next=[...previous,today];reviewProgress[i]={passes:next,done:next.length>=2};storeReviewProgress();renderWeaknessAnalysis();
+    alert(next.length>=2?'🌸 2日間満点！復習クリア、おめでとう！':'🌱 全問正解！別の日にもう一度満点でクリアだよ。');
+  });
+  details.append(form);card.append(details);target.append(card);
+ });
+ document.querySelector('#study-cleared-count').textContent='('+completed+'件)';
+ if(!completed){const msg=document.createElement('p');msg.className='study-hint';msg.textContent='まだクリアした項目はないよ。少しずつ増やそう 🌱';cleared.append(msg);}
 }
+
 renderWeaknessAnalysis();
 const studyView=document.querySelector('#study-view');
 document.querySelector('#study-history-open').addEventListener('click',()=>{
