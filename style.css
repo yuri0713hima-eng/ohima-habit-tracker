@@ -155,3 +155,9 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 @media(max-width:700px){.tab-nav button{font-size:11px;padding:12px 2px}}
 
 .refresh-strip{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;padding:5px 0;font-size:11px;color:#7a8779}.refresh-strip button{border:1px solid #d8e3d6;border-radius:999px;background:#f2f7ef;color:#4d7659;padding:7px 11px;font:inherit;font-weight:700}
+
+/* Quiet refresh action, tucked into the upper corner */
+.refresh-strip{justify-content:flex-end;padding:0 2px 8px;gap:0}
+.refresh-strip span{display:none}
+.refresh-strip button{background:transparent;border:0;padding:5px 6px;color:#9ca99b;font-size:11px;font-weight:400;opacity:.8}
+.refresh-strip button:hover,.refresh-strip button:focus-visible{opacity:1;color:#54765a}
