@@ -129,9 +129,11 @@ function renderWork() {
 }
 document.querySelectorAll('[data-tab]').forEach(button=>button.addEventListener('click',()=>{
   const isWork=button.dataset.tab==='work';
+  const isStudy=button.dataset.tab==='study';
   document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',String(b===button)));
   document.querySelector('#habit-view').hidden=isWork;
   document.querySelector('#work-view').hidden=!isWork;
+  document.querySelector('#study-view').hidden=!isStudy;
 }));
 document.querySelector('#work-add').addEventListener('submit',event=>{
   event.preventDefault();
@@ -228,3 +230,65 @@ function renderExtras() {
 document.querySelector('#month-prev').addEventListener('click',()=>{displayMonth=shiftMonth(displayMonth,-1);renderExtras();});
 document.querySelector('#month-next').addEventListener('click',()=>{if(displayMonth<dateKey(new Date()).slice(0,7)){displayMonth=shiftMonth(displayMonth,1);renderExtras();}});
 
+
+
+/* Study notebook: a separate key preserves all old habit and work records. */
+const studyStorageKey='ohima-study-v1';
+const studyDate=document.querySelector('#study-date');
+let studyRecords=[];
+let studyError=false;
+try {const raw=JSON.parse(localStorage.getItem(studyStorageKey));if(Array.isArray(raw))studyRecords=raw.filter(x=>x&&typeof x==='object'&&/^\d{4}-\d{2}-\d{2}$/.test(x.day||'')&&typeof x.book==='string').slice(0,3000);}catch{studyError=true}
+studyDate.value=dateKey(new Date());
+function saveStudy(){
+  try{localStorage.setItem(studyStorageKey,JSON.stringify(studyRecords));studyError=false;}
+  catch{studyError=true;}
+  document.querySelector('#study-save-status').textContent=studyError?'保存に失敗しました。記録を別の場所に控えてください。':'勉強記録をこのブラウザに保存しました。';
+}
+function studyCard(item,allowDelete){
+  const div=document.createElement('article');div.className='study-entry';
+  const head=document.createElement('div');head.className='study-entry-head';
+  const name=document.createElement('strong');name.textContent=item.book;
+  const info=document.createElement('span');info.textContent=item.day+' · '+item.minutes+'分';
+  head.append(name,info);
+  const scope=document.createElement('p');scope.textContent=item.scope;
+  div.append(head,scope);
+  if(item.note){const note=document.createElement('p');note.className='study-hint';note.textContent=item.note;div.append(note);}
+  const bottom=document.createElement('div');bottom.className='study-entry-bottom';
+  const label=document.createElement('label');label.className='study-check';
+  const check=document.createElement('input');check.type='checkbox';check.checked=item.review===true;
+  check.addEventListener('change',()=>{item.review=check.checked;saveStudy();renderStudy();});
+  label.append(check,document.createTextNode(' 復習する'));bottom.append(label);
+  if(allowDelete){const del=document.createElement('button');del.type='button';del.textContent='削除';del.addEventListener('click',()=>{if(!confirm('この学習記録を削除する？'))return;studyRecords=studyRecords.filter(x=>x!==item);saveStudy();renderStudy();});bottom.append(del);}
+  div.append(bottom);return div;
+}
+function renderStudy(){
+  const day=studyDate.value;
+  const items=studyRecords.filter(x=>x.day===day);
+  const minutes=items.reduce((sum,x)=>sum+(Number(x.minutes)||0),0);
+  document.querySelector('#study-summary').textContent=day+' · '+items.length+'件 · 合計'+minutes+'分の学習 🌱';
+  const list=document.querySelector('#study-items');list.replaceChildren();
+  if(!items.length){const p=document.createElement('p');p.className='study-hint';p.textContent='まだ記録はないよ。今日の一歩を残してみよう！';list.append(p);}
+  items.slice().reverse().forEach(x=>list.append(studyCard(x,true)));
+  const review=document.querySelector('#study-review-items');review.replaceChildren();
+  const pending=studyRecords.filter(x=>x.review===true).sort((a,b)=>b.day.localeCompare(a.day));
+  if(!pending.length){const p=document.createElement('p');p.className='study-hint';p.textContent='復習マークを付けた内容がここに並ぶよ。';review.append(p);}
+  pending.forEach(x=>review.append(studyCard(x,false)));
+  document.querySelector('#study-save-status').textContent=studyError?'保存に失敗しました。':'勉強記録はこのブラウザに保存されます。';
+}
+studyDate.addEventListener('change',renderStudy);
+document.querySelector('#study-form').addEventListener('submit',e=>{
+  e.preventDefault();
+  const scope=document.querySelector('#study-scope').value.trim();
+  if(!scope)return;
+  studyRecords.push({id:Date.now()+'-'+Math.random().toString(36).slice(2),day:studyDate.value,book:document.querySelector('#study-book').value,scope:scope.slice(0,160),minutes:Math.max(0,Math.min(600,Number(document.querySelector('#study-minutes').value)||0)),note:document.querySelector('#study-note').value.slice(0,1500),review:document.querySelector('#study-review').checked});
+  saveStudy();renderStudy();
+  document.querySelector('#study-scope').value='';
+  document.querySelector('#study-note').value='';
+  document.querySelector('#study-review').checked=false;
+});
+document.querySelector('#study-export').addEventListener('click',()=>{
+  const payload={exportedAt:new Date().toISOString(),habits:localStorage.getItem(storageKey),work:localStorage.getItem(workStorageKey),study:localStorage.getItem(studyStorageKey)};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='ohima-backup-'+dateKey(new Date())+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+});
+renderStudy();
