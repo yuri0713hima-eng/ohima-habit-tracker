@@ -114,3 +114,21 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .review-quiz-form label{display:flex;align-items:center;gap:8px;padding:7px 0;font-size:13px;line-height:1.5}
 .review-quiz-form input{accent-color:#688c73}
 .study-cleared{border-top:1px solid #e6ebe0;margin-top:18px;padding-top:10px}
+
+/* Meeting notebook */
+.meeting-panel .meeting-help{font-size:12px;color:#819080;line-height:1.8}
+.meeting-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:17px 0}
+.meeting-controls label,.meeting-form label{display:grid;gap:7px;font-size:13px;color:#586c5c;font-weight:600;min-width:0}
+.meeting-controls select,.meeting-controls input,.meeting-form textarea,.meeting-summary textarea{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;border:1px solid #dae4d7;border-radius:11px;background:#fffefa;padding:12px;font:inherit;font-size:16px;color:#415747}
+.meeting-form{display:grid;gap:12px}
+.meeting-form textarea{resize:vertical;min-height:100px}
+.meeting-list{display:grid;gap:10px;margin:12px 0 20px}
+.meeting-entry{border:1px solid #e5ebdf;border-radius:13px;background:#fafbf7;padding:12px 14px;min-width:0}
+.meeting-entry small{font-size:11px;color:#849187}
+.meeting-entry p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.7}
+.meeting-actions{display:flex;gap:8px;justify-content:flex-end}
+.meeting-actions button{border:1px solid #dbe5d7;border-radius:9px;background:#f4f8f0;color:#56755d;padding:7px 12px;font:inherit;font-size:12px}
+.meeting-summary{background:#f5f8f1;border-radius:13px;padding:14px}
+.meeting-summary summary{cursor:pointer;color:#55795e;font-size:14px;font-weight:700}
+.meeting-summary textarea{margin:12px 0;min-height:200px;white-space:pre-wrap}
+@media(max-width:700px){.meeting-controls{grid-template-columns:1fr}.meeting-panel{overflow-wrap:anywhere}}
