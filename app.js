@@ -424,3 +424,61 @@ document.querySelector('#study-history-back').addEventListener('click',()=>{
  document.querySelector('#study-history-section').hidden=true;
  studyView.scrollIntoView({behavior:'smooth',block:'start'});
 });
+
+
+/* Monthly meeting notebooks: separate key, never overwrite habit/work/study data. */
+const meetingKey='ohima-meetings-v1';
+let meetingNotes=[];
+try{const saved=JSON.parse(localStorage.getItem(meetingKey));if(Array.isArray(saved))meetingNotes=saved.filter(x=>x&&typeof x.text==='string'&&/^\d{4}-\d{2}$/.test(x.month||'')&&['staff','menu'].includes(x.type)).slice(0,3000)}catch{}
+const meetingType=document.querySelector('#meeting-type');
+const meetingMonth=document.querySelector('#meeting-month');
+meetingMonth.value=dateKey(new Date()).slice(0,7);
+const meetingInput=document.querySelector('#meeting-input');
+const meetingStatus=document.querySelector('#meeting-status');
+function saveMeeting(){
+ try{localStorage.setItem(meetingKey,JSON.stringify(meetingNotes));meetingStatus.textContent='会議メモを保存したよ 🌷';return true;}
+ catch{meetingStatus.textContent='保存できませんでした。大切なメモはコピーして控えてね。';return false;}
+}
+function meetingText(){
+ const type=meetingType.value,month=meetingMonth.value;
+ const notes=meetingNotes.filter(x=>x.type===type&&x.month===month);
+ const header=(type==='staff'?'職員会議':'献立会議')+'｜'+month.replace('-','年')+'月';
+ const lines=[header,'','【共有・相談したいこと】'];
+ notes.forEach((x,i)=>lines.push((i+1)+'. '+x.text.trim().replace(/\n/g,'\n   ')));
+ if(!notes.length)lines.push('（まだメモがありません）');
+ lines.push('','【会議で決まったこと・確認事項】','','【次にすること】','');
+ return lines.join('\n');
+}
+function renderMeeting(){
+ const type=meetingType.value,month=meetingMonth.value;
+ const entries=meetingNotes.filter(x=>x.type===type&&x.month===month);
+ document.querySelector('#meeting-count').textContent=entries.length+'件';
+ const list=document.querySelector('#meeting-list');list.replaceChildren();
+ if(!entries.length){const p=document.createElement('p');p.className='meeting-help';p.textContent='この月のメモはまだないよ。会議前に思いついたことを残そう！';list.append(p)}
+ entries.forEach(x=>{
+  const item=document.createElement('article');item.className='meeting-entry';
+  const date=document.createElement('small');date.textContent=x.created||'';
+  const body=document.createElement('p');body.textContent=x.text;
+  const edit=document.createElement('button');edit.type='button';edit.textContent='編集';
+  edit.addEventListener('click',()=>{const next=prompt('メモを編集',x.text);if(next===null)return;const trimmed=next.trim().slice(0,2000);if(!trimmed)return;const old=x.text;x.text=trimmed;if(!saveMeeting())x.text=old;renderMeeting();});
+  const del=document.createElement('button');del.type='button';del.textContent='削除';
+  del.addEventListener('click',()=>{if(!confirm('この会議メモを削除する？'))return;const old=meetingNotes;meetingNotes=old.filter(n=>n!==x);if(!saveMeeting())meetingNotes=old;renderMeeting();});
+  const actions=document.createElement('div');actions.className='meeting-actions';actions.append(edit,del);item.append(date,body,actions);list.append(item);
+ });
+ document.querySelector('#meeting-output').value=meetingText();
+}
+document.querySelector('#meeting-add').addEventListener('submit',e=>{
+ e.preventDefault();const text=meetingInput.value.trim();if(!text||!meetingMonth.value)return;
+ const entry={id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),type:meetingType.value,month:meetingMonth.value,text:text.slice(0,2000),created:dateKey(new Date())};
+ meetingNotes.push(entry);
+ if(saveMeeting())meetingInput.value='';else meetingNotes.pop();
+ renderMeeting();
+});
+meetingType.addEventListener('change',renderMeeting);
+meetingMonth.addEventListener('change',renderMeeting);
+document.querySelector('#meeting-copy').addEventListener('click',async()=>{
+ const value=meetingText();
+ try{await navigator.clipboard.writeText(value);meetingStatus.textContent='会議用のまとめをコピーしたよ 🌷';}
+ catch{const el=document.querySelector('#meeting-output');el.focus();el.select();meetingStatus.textContent='コピーができなかったので、選択された文章を長押しでコピーしてね。';}
+});
+renderMeeting();
