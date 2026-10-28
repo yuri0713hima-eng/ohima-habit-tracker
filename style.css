@@ -97,3 +97,11 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .study-entry-bottom button{border:0;background:#f3e8e6;color:#9d6662;border-radius:8px;padding:8px 12px}
 .study-hint{font-size:12px!important;color:#839083!important;line-height:1.8}
 @media(max-width:700px){.tab-nav{gap:3px;padding:4px}.tab-nav button{font-size:11px;padding:13px 3px}.study-hero,.study-card{padding:18px}.study-form{grid-template-columns:minmax(0,1fr)}.study-form label{grid-column:1/-1}}
+
+/* Separate full-history screen within study tab */
+.study-page.history-open > :not(#study-history-section){display:none!important}
+.study-page #study-history-section[hidden]{display:none!important}
+.study-back{border:1px solid #dce7dc;border-radius:10px;background:#eff5ed;color:#54755a;padding:12px 16px;font:inherit;font-size:13px;margin-bottom:18px}
+.study-page #study-analysis .study-entry strong{color:#537f63}
+.study-page #study-analysis .study-entry p{overflow-wrap:anywhere}
+.study-page #study-history-section .study-entry{overflow-wrap:anywhere}
