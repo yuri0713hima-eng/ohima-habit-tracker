@@ -137,3 +137,12 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 #work-view,.work-panel,.work-head>*,.work-fields,.work-fields>*,.meeting-controls,.meeting-form,.meeting-summary{min-width:0}
 #work-view input:not([type=checkbox]):not([type=radio]),#work-view select,#work-view textarea{box-sizing:border-box;width:100%;max-width:100%;min-width:0}
 #work-view input[type=date],#work-view input[type=month]{display:block}
+
+/* iPhone Safari: force all work controls to fit their card */
+@media(max-width:800px){
+ #work-view .work-fields,#work-view .meeting-controls{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important}
+ #work-view .work-fields>* ,#work-view .meeting-controls>*{grid-column:1/-1!important;min-width:0!important;max-width:100%!important}
+ #work-view .work-fields input,#work-view .work-fields select,#work-view .meeting-controls input,#work-view .meeting-controls select,#work-view textarea{display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+ #work-view .work-panel{min-width:0!important;max-width:100%!important;overflow:hidden}
+ #work-view input[type=month],#work-view input[type=date]{-webkit-appearance:none;appearance:none;overflow:hidden}
+}
