@@ -146,3 +146,5 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
  #work-view .work-panel{min-width:0!important;max-width:100%!important;overflow:hidden}
  #work-view input[type=month],#work-view input[type=date]{-webkit-appearance:none;appearance:none;overflow:hidden}
 }
+
+.backup-restore{margin-top:16px;padding-top:15px;border-top:1px solid #e3e9df;display:grid;gap:10px;min-width:0}.backup-restore label{font-size:14px;font-weight:700;color:#527b60}.backup-restore input{width:100%;min-width:0;max-width:100%;font-size:13px;box-sizing:border-box}.backup-restore .study-hint{overflow-wrap:anywhere}
