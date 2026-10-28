@@ -248,7 +248,7 @@ function studyCard(item,allowDelete){
   const div=document.createElement('article');div.className='study-entry';
   const head=document.createElement('div');head.className='study-entry-head';
   const name=document.createElement('strong');name.textContent=item.book;
-  const info=document.createElement('span');info.textContent=item.day+' · '+item.minutes+'分';
+  const info=document.createElement('span');info.textContent=item.day+' · '+(item.minutes==null?'時間未記録':item.minutes+'分');
   head.append(name,info);
   const scope=document.createElement('p');scope.textContent=item.scope;
   div.append(head,scope);
@@ -264,7 +264,7 @@ function studyCard(item,allowDelete){
 function renderStudy(){
   const day=studyDate.value;
   const items=studyRecords.filter(x=>x.day===day);
-  const minutes=items.reduce((sum,x)=>sum+(Number(x.minutes)||0),0);
+  const minutes=items.reduce((sum,x)=>sum+(x.minutes==null?0:Number(x.minutes)||0),0);
   document.querySelector('#study-summary').textContent=day+' · '+items.length+'件 · 合計'+minutes+'分の学習 🌱';
   const list=document.querySelector('#study-items');list.replaceChildren();
   if(!items.length){const p=document.createElement('p');p.className='study-hint';p.textContent='まだ記録はないよ。今日の一歩を残してみよう！';list.append(p);}
@@ -292,3 +292,25 @@ document.querySelector('#study-export').addEventListener('click',()=>{
   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='ohima-backup-'+dateKey(new Date())+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
 });
 renderStudy();
+
+
+document.querySelector('#study-import').addEventListener('change',async event=>{
+ const file=event.target.files?.[0];if(!file)return;
+ const status=document.querySelector('#study-import-status');
+ try{
+   if(file.size>2_000_000)throw Error('ファイルが大きすぎます。');
+   const parsed=JSON.parse(await file.text());
+   if(!Array.isArray(parsed)||parsed.length>3000)throw Error('指定された移行形式ではありません。');
+   const incoming=parsed.map(x=>{
+     if(!x||typeof x!=='object'||!/^\d{4}-\d{2}-\d{2}$/.test(x.day||'')||typeof x.book!=='string'||typeof x.scope!=='string'||typeof x.id!=='string'||!x.id.startsWith('notion-'))throw Error('移行データの形式が正しくありません。');
+     return {id:x.id.slice(0,120),day:x.day,book:x.book.slice(0,120),scope:x.scope.slice(0,160),minutes:x.minutes===null?null:Math.max(0,Math.min(600,Number(x.minutes)||0)),note:String(x.note||'').slice(0,1500),review:x.review===true};
+   });
+   const existing=new Set(studyRecords.map(x=>x.id));
+   const additions=incoming.filter(x=>!existing.has(x.id));
+   const merged=studyRecords.concat(additions);
+   localStorage.setItem(studyStorageKey,JSON.stringify(merged));
+   studyRecords=merged;studyError=false;renderStudy();
+   status.textContent=additions.length+'件の過去の記録を追加したよ 🌷（すでにあった'+(incoming.length-additions.length)+'件は重複を防止）';
+ }catch(err){status.textContent='読み込めませんでした。記録は変更していません。 '+err.message;}
+ event.target.value='';
+});
