@@ -173,3 +173,15 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .study-edit-actions button{border:0;border-radius:10px;padding:10px 12px;font:inherit;font-size:13px}
 .study-edit-actions button[type=button]{background:#f0f1ed;color:#647367}
 .study-edit-actions .study-submit{min-height:40px}
+
+/* Compact, understated edit action */
+.study-entry-bottom .study-edit-button{
+  width:auto;min-width:0;min-height:0;
+  padding:4px 10px;border:1px solid #dbe5da;border-radius:999px;
+  background:transparent;color:#78917e;
+  font-size:11px;font-weight:500;letter-spacing:.025em;
+  box-shadow:none;line-height:1.5;
+}
+.study-entry-bottom .study-edit-button:focus-visible{
+  outline:2px solid #7da58a;outline-offset:2px;
+}
