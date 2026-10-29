@@ -260,6 +260,35 @@ function studyCard(item,allowDelete){
   const check=document.createElement('input');check.type='checkbox';check.checked=item.review===true;
   check.addEventListener('change',()=>{item.review=check.checked;saveStudy();renderStudy();});
   label.append(check,document.createTextNode(' 復習する'));bottom.append(label);
+  const edit=document.createElement('button');edit.type='button';edit.textContent='編集';edit.className='study-edit-button';
+  edit.addEventListener('click',()=>{
+    if(div.querySelector('.study-edit-form'))return;
+    const form=document.createElement('form');form.className='study-edit-form';
+    const makeField=(title,control)=>{
+      const label=document.createElement('label');label.textContent=title;label.append(control);form.append(label);return control;
+    };
+    const date=makeField('日付',document.createElement('input'));date.type='date';date.value=item.day;date.required=true;
+    const book=makeField('教材',document.createElement('input'));book.type='text';book.maxLength=120;book.value=item.book;book.required=true;
+    const content=makeField('学習範囲・内容',document.createElement('input'));content.type='text';content.maxLength=160;content.value=item.scope;content.required=true;
+    const mins=makeField('勉強時間（分）',document.createElement('input'));mins.type='number';mins.min='0';mins.max='600';mins.placeholder='未記録';mins.value=item.minutes==null?'':String(item.minutes);
+    const memo=makeField('メモ・気づいたこと',document.createElement('textarea'));memo.maxLength=1500;memo.rows=4;memo.value=item.note||'';
+    const controls=document.createElement('div');controls.className='study-edit-actions';
+    const cancel=document.createElement('button');cancel.type='button';cancel.textContent='キャンセル';cancel.addEventListener('click',()=>form.remove());
+    const submit=document.createElement('button');submit.type='submit';submit.textContent='変更を保存';submit.className='study-submit';
+    controls.append(cancel,submit);form.append(controls);
+    form.addEventListener('submit',event=>{
+      event.preventDefault();
+      const nextDate=date.value;
+      if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(nextDate)||!book.value.trim()||!content.value.trim())return;
+      const old={day:item.day,book:item.book,scope:item.scope,minutes:item.minutes,note:item.note};
+      Object.assign(item,{day:nextDate,book:book.value.trim().slice(0,120),scope:content.value.trim().slice(0,160),minutes:mins.value===''?null:Number(mins.value),note:memo.value.slice(0,1500)});
+      saveStudy();
+      if(studyError){Object.assign(item,old);alert('保存できませんでした。変更前の内容はそのままです。');return;}
+      renderStudy();
+    });
+    div.append(form);form.scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+  bottom.append(edit);
   if(allowDelete){const del=document.createElement('button');del.type='button';del.textContent='削除';del.addEventListener('click',()=>{if(!confirm('この学習記録を削除する？'))return;studyRecords=studyRecords.filter(x=>x!==item);saveStudy();renderStudy();});bottom.append(del);}
   div.append(bottom);return div;
 }
