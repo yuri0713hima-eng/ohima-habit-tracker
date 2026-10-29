@@ -163,3 +163,13 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .refresh-strip button:hover,.refresh-strip button:focus-visible{opacity:1;color:#54765a}
 
 .refresh-strip{padding:0 3px 3px;justify-content:flex-end}.refresh-strip button{font-size:17px;line-height:1;padding:5px;color:#a8b4a6;background:transparent;border:0;opacity:.7}
+
+/* Edit a saved study entry without leaving the list */
+.study-entry-bottom .study-edit-button{background:#e8f0e8;color:#50755e}
+.study-edit-form{display:grid;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid #e3e8df;min-width:0}
+.study-edit-form label{display:grid;gap:6px;font-size:12px;font-weight:600;color:#607363;min-width:0}
+.study-edit-form input,.study-edit-form textarea{width:100%;min-width:0;max-width:100%;box-sizing:border-box;border:1px solid #dbe4d8;background:#fffefa;border-radius:10px;padding:11px;font:inherit;font-size:16px;color:#405746}
+.study-edit-actions{display:flex;gap:10px;justify-content:flex-end}
+.study-edit-actions button{border:0;border-radius:10px;padding:10px 12px;font:inherit;font-size:13px}
+.study-edit-actions button[type=button]{background:#f0f1ed;color:#647367}
+.study-edit-actions .study-submit{min-height:40px}
