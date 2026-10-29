@@ -94,7 +94,14 @@ body{background:radial-gradient(ellipse at 95% 5%,#eee6ed80,transparent 35%),#f7
 .study-entry p{font-size:13px;line-height:1.7;margin:9px 0}
 .study-entry-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .study-entry-bottom .study-check{display:flex;align-items:center;gap:6px;font-size:12px}
-.study-entry-bottom button{border:0;background:#f3e8e6;color:#9d6662;border-radius:8px;padding:8px 12px}
+.study-entry-bottom button{
+  width:auto;min-width:0;min-height:0;
+  padding:4px 10px;border:1px solid #e5cdca;border-radius:999px;
+  background:transparent;color:#a87873;
+  font-size:11px;font-weight:500;letter-spacing:.025em;
+  box-shadow:none;line-height:1.5;
+}
+.study-entry-bottom button:focus-visible{outline:2px solid #bc8983;outline-offset:2px}
 .study-hint{font-size:12px!important;color:#839083!important;line-height:1.8}
 @media(max-width:700px){.tab-nav{gap:3px;padding:4px}.tab-nav button{font-size:11px;padding:13px 3px}.study-hero,.study-card{padding:18px}.study-form{grid-template-columns:minmax(0,1fr)}.study-form label{grid-column:1/-1}}
 
