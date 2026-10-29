@@ -279,7 +279,7 @@ function studyCard(item,allowDelete){
     form.addEventListener('submit',event=>{
       event.preventDefault();
       const nextDate=date.value;
-      if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(nextDate)||!book.value.trim()||!content.value.trim())return;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(nextDate)||!book.value.trim()||!content.value.trim()){alert('日付・教材・学習内容を確認してね。');return;}
       const old={day:item.day,book:item.book,scope:item.scope,minutes:item.minutes,note:item.note};
       Object.assign(item,{day:nextDate,book:book.value.trim().slice(0,120),scope:content.value.trim().slice(0,160),minutes:mins.value===''?null:Number(mins.value),note:memo.value.slice(0,1500)});
       saveStudy();
